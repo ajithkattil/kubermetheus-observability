@@ -70,3 +70,57 @@ This repository contains a **self-contained observability platform** on Kubernet
 make up            # create cluster + monitoring stack + demo app
 make pf            # open ports (optional, if not using ingress)
 make test          # generate load + trigger alerts
+
+## 🚀 Access UIs
+
+Grafana → http://grafana.localtest.me (admin / prom-operator)
+
+Prometheus → http://prometheus.localtest.me
+
+Alertmanager → http://alertmanager.localtest.me
+
+Loki → http://loki.localtest.me
+
+👉 localtest.me resolves to 127.0.0.1 automatically.
+
+## 🚀 Components
+
+Prometheus: collects metrics, scrapes ServiceMonitor targets
+
+Alertmanager: triggers alerts (infra + SLOs)
+
+Grafana: dashboards, logs, visualizations
+
+Loki/Promtail: logs pipeline from pods
+
+Demo App: generates traffic, metrics, logs
+
+k6 + Chaos: validates monitoring and alerting
+
+## 🚀 Demo Walkthrough
+
+Run make up → cluster + stack bootstraps.
+
+Open Grafana → see Prometheus + Loki datasources already added.
+
+Run make test → synthetic load + pod kill.
+
+Prometheus: Targets → demo should be UP.
+
+Alertmanager: DemoAvailabilityBelow99 fires.
+
+Grafana: Explore → Loki → {namespace="demo-app"} shows pod logs.
+
+## 🚀 Runbook
+
+Target Down Alert → check Prometheus → find failing pod → kubectl get pods -n demo-app.
+
+SLO Alert (<99% availability) → check Grafana dashboard → drill into Loki logs.
+
+Remediation → kubectl -n demo-app rollout restart deploy/demo.
+## 🚀 Cleanup
+make down
+
+📜 License
+
+MIT — free to use for demos, learning, and interviews.
